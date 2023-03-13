@@ -1,5 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Poppins:wght@300;400;500&display=swap');
+
 .App {
   text-align: center;
+  justify-content: center;
+  display: flex;
+  background-color: rgb(240, 248, 255);
+  min-height: 100vh;
+  padding-top: 3vh;
 }
 
 .App-logo {
@@ -35,4 +42,162 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* .livechart {
+  width: 50%;
+  height: 50%;
+}
+
+.chartdata {
+  width: 50%;
+  height: 50%;
+  background-color: palegoldenrod;
+} */
+
+.section {
+  border: 4px solid rgb(220, 230, 255);
+}
+
+.sectionBorder {
+  border: 2px solid rgb(220, 230, 255);
+  margin: 10px;
+  margin-bottom: 20px;
+}
+
+.liveDataContainer {
+  display: flex;
+  padding: 20px;
+  gap: 10px;
+  justify-content: center;
+}
+
+.liveDataBox {
+  width: 300px;
+  padding: 20px;
+  
+}
+
+.liveDataLabel {
+  font-size: 15px;
+  font-family: 'Poppins';
+}
+
+.liveDataReading {
+  font-size: 50px;
+  font-family: 'Poppins';
+  font-weight: 500;
+}
+
+.moisture {
+  background-color: rgb(163, 218, 240);
+}
+
+.temperature {
+  background-color: rgb(240, 153, 153);
+}
+
+.humidity {
+  background-color: rgb(190, 224, 180);
+}
+
+.sunlight {
+  background-color: rgb(240, 227, 153);
+}
+
+.reservoir {
+  border: 2px solid rgba(0, 0, 255, 0.329);
+  border-radius: 10px;
+}
+
+.suffix {
+  font-size: 25px;
+}
+
+.timestamp {
+  font-size: 12px;
+  font-family: 'Montserrat';
+  font-weight: 300;
+}
+
+.buttonBox {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.chartButton {
+  font-family: 'Montserrat' !important;
+}
+
+.sectionTitleBox {
+  display: flex;
+  justify-content: start;
+  padding: 15px;
+  border-bottom: 2px solid rgb(220, 230, 255);
+}
+
+.sectionTitle {
+  font-family: 'Poppins';
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.settingsBox {
+  /* border-radius: 10px; */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.autoWatering {
+}
+
+.manualWatering {
+    border-top: 2px solid rgb(220, 230, 255);
+
+}
+
+
+.settingsTitle{
+  font-family: 'Poppins';
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.sectionSubtitleBox {
+  display: flex;
+  justify-content: start;
+  padding: 10px;
+}
+
+.settings {
+  display: block;
+}
+
+.formBox {
+  padding: 10px 0 10px;
+  font-family: 'Montserrat';
+}
+
+.switch {
+  font-size: 25px;
+  text-align: end;
+  padding: 0 !important;
+}
+
+.settingsSave {
+  font-size: 15px !important; 
+  width: 60px;
+}
+
+.waterPlant {
+  font-size: 15px !important; 
+  width: 70px;
+  height: 50px;
+}
+
+
+.waterIcon {
+  height: 30px;
 }
