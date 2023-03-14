@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { MoistureFormat, MoistureFormat2, ReservoirFormat } from './Constants';
+import { MoistureFormat, MoistureFormat2, ReservoirFormat, watering_url } from './Constants';
 import Form from 'react-bootstrap/Form';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 import RangeSlider from 'react-bootstrap-range-slider';
@@ -29,6 +29,7 @@ function App() {
   useEffect(() => {
     getAutoWateringValues()
   },[])
+  
   const getReservoir = (data) => {
     setReservoir(data)
   }
@@ -42,7 +43,7 @@ function App() {
 
   const getAutoWateringValues = () => {
     fetch(
-      `http://192.168.68.61:8087/get_auto_watering`, { method: 'GET'}
+      `${watering_url}/get_auto_watering`, { method: 'GET'}
     ) 
       .then(res => res.json())
       .then(data => {
@@ -56,7 +57,7 @@ function App() {
   const manualWaterSubmit = () => {
     setManualLoading(true)
     fetch(
-      `http://192.168.68.61:8087/manual_water_plant`, { method: 'POST', body: JSON.stringify({ "duration": volumeToSeconds(manualVolume) }) }
+      `${watering_url}/manual_water_plant`, { method: 'POST', body: JSON.stringify({ "duration": volumeToSeconds(manualVolume) }) }
     )
       .then(res => res.json())
       .then(data => {
@@ -71,7 +72,7 @@ function App() {
     setAutoLoading(true)
     console.log(MoistureFormat2(threshold));
     fetch(
-      `http://192.168.68.61:8087/update_auto_watering`, { method: 'PUT', body: JSON.stringify({ "threshold": MoistureFormat2(threshold), "duration" : volumeToSeconds(autoVolume), "auto": autoToggle }) }
+      `${watering_url}/update_auto_watering`, { method: 'PUT', body: JSON.stringify({ "threshold": MoistureFormat2(threshold), "duration" : volumeToSeconds(autoVolume), "auto": autoToggle }) }
     )
       .then(res => res.json())
       .then(data => {

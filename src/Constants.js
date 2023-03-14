@@ -1,11 +1,15 @@
 // operational ranges
 const sunlight_analog_min = 255 // 255 is room light
 const sunlight_analog_max = 6 // 6 is direct sunlight
-const moisture_analog_dry = 230 // 230 is 100% dry
-const moisture_analog_wet = 190 // 200 is 100% wet
-const reservour_analog_full = 120 // 120 is 100% full
-const reservour_analog_empty = 0 // 0 is 100% empty
-
+const moisture_analog_dry = 246 // 230 is 100% dry
+const moisture_analog_damp_cloth = 220
+const moisture_analog_wet = 205 // 200 is 100% wet
+const reservoir_analog_full = 125 // 125 is 100% full
+const reservoir_analog_70 = 110 
+const reservoir_analog_50 = 100 
+const reservoir_analog_30 = 80
+const reservoir_analog_20 = 70 
+const reservoir_analog_1 = 30 
 export function SunlightFormat(input) {
 
     // to prevent rogue readings
@@ -19,13 +23,15 @@ export function SunlightFormat(input) {
     } 
     return (output * 100).toFixed(0);
 }
-
+// const moisture_analog_dry = 245
+// const moisture_analog_damp_cloth = 220
+// const moisture_analog_wet = 205 
 export function MoistureFormat(input) {
     // to prevent rogue readings
-    if (input < 190) {
-        input = 233
+    if (input < moisture_analog_wet) {
+        input = moisture_analog_dry
     }
-    var output = (Math.abs(input - moisture_analog_dry)) / (moisture_analog_dry-moisture_analog_wet)
+    var output = (moisture_analog_dry - input) / (moisture_analog_dry-moisture_analog_wet)
     if (output > 1) {
         output = 1
     }
@@ -39,8 +45,25 @@ export function MoistureFormat2(input) {
     return (moisture_analog_dry - output)
 }
 
-// 120 is 100% full and 0 is 100% empty
+// const reservoir_analog_full = 125 // 125 is 100% full
+// const reservoir_analog_70 = 110 
+// const reservoir_analog_50 = 100 
+// const reservoir_analog_30 = 80
+// const reservoir_analog_20 = 70 
+// const reservoir_analog_1 = 30 
 export function ReservoirFormat(input) {
-    return (((input-reservour_analog_empty)/reservour_analog_full) * 100).toFixed(0);
+    if (input < reservoir_analog_1) {
+        return 0;
+    }
+    else if (input >= reservoir_analog_full) {
+        return 100;
+    }
+    else {
+        return ((input/(reservoir_analog_full)) * 100).toFixed(0);
+    }
 }
 
+
+export const chart_data_url = "http://192.168.68.64:8088/getalldata"
+export const live_data_url = "http://192.168.68.64:8089/"
+export const watering_url = "http://192.168.68.64:8087/"

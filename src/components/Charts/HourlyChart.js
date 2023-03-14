@@ -16,7 +16,8 @@ import { Line } from 'react-chartjs-2';
 import { 
   SunlightFormat,
   MoistureFormat,
-  ReservoirFormat
+  ReservoirFormat,
+  chart_data_url
 } from '../../Constants';
 
 
@@ -254,7 +255,7 @@ const HourlyChart = ({type}) => {
   const getData = async () => {
 
     try {
-      const res = await fetch("http://192.168.68.61:8088/getalldata")
+      const res = await fetch(chart_data_url)
       const result = await res.json()
       setData(result.data)
       setError(false)

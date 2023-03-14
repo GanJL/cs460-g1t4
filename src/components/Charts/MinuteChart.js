@@ -257,7 +257,7 @@ const MinuteChart = ({ type }) => {
   const getData = async () => {
 
     try {
-      const res = await fetch("http://192.168.68.61:8088/getalldata")
+      const res = await fetch("http://192.168.68.64:8088/getalldata")
       const result = await res.json()
       setData(result.data)
       setError(false)

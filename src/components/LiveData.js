@@ -5,7 +5,8 @@ import '../App.css';
 import {
     SunlightFormat,
     MoistureFormat,
-    ReservoirFormat
+    ReservoirFormat,
+    live_data_url
 } from '../Constants';
 
 const LiveData = ({ getReservoir }) => {
@@ -20,30 +21,10 @@ const LiveData = ({ getReservoir }) => {
     });
     const [error, setError] = useState(false);
 
-    const loadLiveData = async () => {
-
-        try {
-            const res = await fetch("http://192.168.68.61:8089/getlivedata")
-            const result = await res.json()
-            console.log(result);
-            setData({
-                temp: result.temperature,
-                humidity: result.humidity,
-                time: result.time,
-                moisture: result.moisture,
-                sunlight: result.sunlight,
-                reservoir: result.reservoir
-            })
-            
-            setError(false)
-        } catch (err) {
-            setError(true)
-        }
-    }
     useEffect(() => {
 
         // establish connection with server
-        const socket = io("http://192.168.68.61:8089/", {
+        const socket = io(live_data_url, {
             transports: ["websocket"],
             cors: {
                 origin: "http://localhost:3000/",
@@ -65,6 +46,7 @@ const LiveData = ({ getReservoir }) => {
 
         socket.on("live_data", (data) => {
             var getData = JSON.parse(data.data);
+            console.log(getData)
             getReservoir(getData.reservoir)
             setData({
                 temperature: getData.temperature,
@@ -114,7 +96,7 @@ const LiveData = ({ getReservoir }) => {
                         </div>
                     </div>
                     <div >
-                        <span className='timestamp'>Last updated: {new Date(data.timestamp).toLocaleTimeString('en-SG')}</span>
+                        <span className='timestamp'>Last updated: {data.timestamp}</span>
                     </div>
                 </div>
 
