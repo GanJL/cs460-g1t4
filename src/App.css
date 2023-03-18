@@ -72,6 +72,11 @@
   justify-content: center;
 }
 
+.liveDataContainer.settings {
+  padding-top: 0px;
+  height: 500px;
+}
+
 .liveDataBox {
   width: 300px;
   padding: 20px;
@@ -133,7 +138,7 @@
 
 .sectionTitleBox {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   padding: 15px;
   border-bottom: 2px solid rgb(220, 230, 255);
 }
@@ -142,6 +147,7 @@
   font-family: 'Poppins';
   font-size: 25px;
   font-weight: 500;
+  text-align: start;
 }
 
 .settingsBox {
@@ -151,6 +157,7 @@
 }
 
 .autoWatering {
+  height: 270px;
 }
 
 .manualWatering {
@@ -167,8 +174,10 @@
 
 .sectionSubtitleBox {
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
+  gap: 20px;
   padding: 10px;
+  align-items: center;
 }
 
 .settings {
@@ -189,15 +198,47 @@
 .settingsSave {
   font-size: 15px !important; 
   width: 60px;
+  text-align: end;
 }
 
-.waterPlant {
+.saveButtonBox {
+  text-align: end;
+  padding-right: 27px !important;
+}
+
+.waterPlant{
   font-size: 15px !important; 
   width: 70px;
   height: 50px;
 }
 
+.saveButton{
+  font-size: 15px !important; 
+  width: 20px;
+  height: 20px;
+}
+
 
 .waterIcon {
   height: 30px;
+}
+.timePickerBox {
+  display: flex;
+  justify-content: end;
+}
+.timePickerCustom {
+  width: 100px !important;
+}
+
+.dropdown {
+  width: 100px !important;
+}
+
+.dropdownCustom {
+  display: flex;
+  justify-content: end;
+}
+
+.dropdownCustom.col {
+  padding: 0 !important;
 }

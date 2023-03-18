@@ -5,7 +5,6 @@ import '../App.css';
 import {
     SunlightFormat,
     MoistureFormat,
-    ReservoirFormat,
     live_data_url
 } from '../Constants';
 
@@ -19,7 +18,7 @@ const LiveData = ({ getReservoir }) => {
         sunlight: 0.0,
         reservoir: 0.0
     });
-    const [error, setError] = useState(false);
+    const [error, setError] = useState(true);
 
     useEffect(() => {
 
@@ -57,6 +56,7 @@ const LiveData = ({ getReservoir }) => {
                 timestamp: getData.time
 
             });
+            setError(false)
         });
 
         return function cleanup() {
@@ -67,40 +67,36 @@ const LiveData = ({ getReservoir }) => {
 
     return (
         <div>
-            {error ? <div >
-                <h3>ERROR &rarr;</h3>
-                <div>Could not connect to server</div>
-            </div> :
-                <div>
-                    <div className='sectionTitleBox'>
-                        <div className='sectionTitle'>
-                            Live Data
-                        </div>
-                    </div>
-                    <div className='liveDataContainer'>
-                        <div className='liveDataBox moisture'>
-                            <h3 className='liveDataLabel'>Moisture</h3>
-                            <div className='liveDataReading'>{MoistureFormat(data.moisture)} <span className='suffix'>%</span></div>
-                        </div>
-                        <div className='liveDataBox sunlight'>
-                            <h3 className='liveDataLabel'>Sunlight</h3>
-                            <div className='liveDataReading'>{SunlightFormat(data.sunlight)} <span className='suffix'>%</span></div>
-                        </div>
-                        <div className='liveDataBox temperature'>
-                            <h3 className='liveDataLabel'>Temperature</h3>
-                            <div className='liveDataReading'>{data.temperature} <span className='suffix'>°C</span></div>
-                        </div>
-                        <div className='liveDataBox humidity'>
-                            <h3 className='liveDataLabel'>Humidity</h3>
-                            <div className='liveDataReading'>{data.humidity} <span className='suffix'>%</span></div>
-                        </div>
-                    </div>
-                    <div >
-                        <span className='timestamp'>Last updated: {data.timestamp}</span>
+            <div>
+                <div className='sectionTitleBox'>
+                    <div className='sectionTitle'>
+                        Live Data
                     </div>
                 </div>
+                <div className='liveDataContainer'>
+                    <div className='liveDataBox moisture'>
+                        <h3 className='liveDataLabel'>Moisture</h3>
+                        <div className='liveDataReading'>{MoistureFormat(data.moisture)} <span className='suffix'>%</span></div>
+                    </div>
+                    <div className='liveDataBox sunlight'>
+                        <h3 className='liveDataLabel'>Sunlight</h3>
+                        <div className='liveDataReading'>{SunlightFormat(data.sunlight)} <span className='suffix'>%</span></div>
+                    </div>
+                    <div className='liveDataBox temperature'>
+                        <h3 className='liveDataLabel'>Temperature</h3>
+                        <div className='liveDataReading'>{data.temperature} <span className='suffix'>°C</span></div>
+                    </div>
+                    <div className='liveDataBox humidity'>
+                        <h3 className='liveDataLabel'>Humidity</h3>
+                        <div className='liveDataReading'>{data.humidity} <span className='suffix'>%</span></div>
+                    </div>
+                </div>
+                <div >
+                    { error ? <span className='timestamp'>Error: Could not connect to server!</span> : <span className='timestamp'>Last updated: {data.timestamp}</span> }
+                </div>
+            </div>
 
-            }
+
         </div>
     )
 }
