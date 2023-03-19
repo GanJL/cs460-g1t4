@@ -83,25 +83,28 @@ const MinuteChart = ({ type }) => {
         minHour = `0${minHour}`
       }
       var minMinute = min.split(":")[1]
+   
 
       const filtered = reversedData.filter((item) => {
-        const date = item[0].split(" ")[0]
-        const minute = item[0].split(" ")[1].split(":")[1]
-        const hour = item[0].split(" ")[1].split(":")[0]
+        const date = item[1].split(" ")[0]
+        const minute = item[1].split(" ")[1].split(":")[1]
+        const hour = item[1].split(" ")[1].split(":")[0]
         return hour == minHour && minute == minMinute && date == today
       })
 
+
+
       if (filtered.length > 0) {
         if (type == 'MS') {
-          moisture.push(MoistureFormat(JSON.parse(filtered[0][1])));
-          sunlight.push(SunlightFormat(JSON.parse(filtered[0][4])));
+          moisture.push(MoistureFormat(JSON.parse(filtered[0][2])));
+          sunlight.push(SunlightFormat(JSON.parse(filtered[0][5])));
         }
         else if (type == 'TH') {
-          temperature.push(JSON.parse(filtered[0][2]));
-          humidity.push(JSON.parse(filtered[0][3]));
+          temperature.push(JSON.parse(filtered[0][3]));
+          humidity.push(JSON.parse(filtered[0][4]));
         }
         else {
-          reservoir.push(ReservoirFormat(JSON.parse(filtered[0][5])));
+          reservoir.push(ReservoirFormat(JSON.parse(filtered[0][6])));
         }
       }
       else {

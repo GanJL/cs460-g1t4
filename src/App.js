@@ -14,12 +14,15 @@ import RangeSlider from 'react-bootstrap-range-slider';
 import waterPlant from './images/watering-plants.png';
 import diskette from './images/diskette.png';
 import fertilizer from './images/fertilizer.png';
+import notification from './images/notification.png';
+import gear from './images/gear.png';
+import waterlevel from './images/waterlevel.png';
 
 import { useEffect, useState } from 'react'
 
 import LiveData from './components/LiveData';
 import ChartData from './components/ChartData';
-import { MoistureFormat, MoistureFormat2, ReservoirFormat, watering_url } from './Constants';
+import { MoistureFormat, MoistureFormat2, ReservoirFormat, ReservoirFormat2, watering_url } from './Constants';
 
 
 function App() {
@@ -42,10 +45,17 @@ function App() {
   const [autoLoading, setAutoLoading] = useState(false);
 
   const [autoMode, setAutoMode] = useState('Watering');
+  const [reservoirMode, setReservoirMode] = useState('Level');
+
+  const [notificationToggle, setNotificationToggle] = useState(false);
+  const [notificationThreshold, setNotificationThreshold] = useState(70.0);
+  const [notificationNumber, setNotificationNumber] = useState(0);
+  const [notificationLoading, setNotificationLoading] = useState(false);
 
   useEffect(() => {
     getAutoWateringValues()
     getAutoFertilisingValues()
+    getNotificationSettings()
   }, [])
 
   const getReservoir = (data) => {
@@ -60,7 +70,7 @@ function App() {
   }
 
   const secondsFormat = (seconds) => {
-    return new Date(seconds * 1000).toISOString().slice(11, 16);   
+    return new Date(seconds * 1000).toISOString().slice(11, 16);
   }
 
   const getAutoWateringValues = () => {
@@ -77,7 +87,6 @@ function App() {
       })
   }
 
-  
   const getAutoFertilisingValues = () => {
     fetch(
       `${watering_url}get_auto_fertiliser`, { method: 'GET' }
@@ -85,11 +94,23 @@ function App() {
       .then(res => res.json())
       .then(data => {
         console.log(data.data[0]);
-
         setAutoFertiliserTime(data.data[0][1])
         setAutoFertiliserVolume(SecondsToVolume(data.data[0][2]))
         setAutoFertiliserToggle(data.data[0][3] == 1 ? true : false)
 
+      })
+  }
+
+  const getNotificationSettings = () => {
+    fetch(
+      `${watering_url}get_notification_settings`, { method: 'GET' }
+    )
+      .then(res => res.json())
+      .then(data => {
+        console.log(data.data[0]);
+        setNotificationNumber(data.data[0][1])
+        setNotificationThreshold(ReservoirFormat(data.data[0][2]))
+        setNotificationToggle(data.data[0][3] == 1 ? true : false)
       })
   }
 
@@ -152,6 +173,23 @@ function App() {
       })
   }
 
+  const reservoirSubmit = () => {
+    setNotificationLoading(true)
+    fetch(
+      `${watering_url}/update_notification`, { method: 'PUT', body: JSON.stringify({ "threshold": ReservoirFormat2(notificationThreshold), "number": (notificationNumber), "toggle": notificationToggle }) }
+    )
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        if (data.status == 200) {
+          setTimeout(() => {
+            setNotificationLoading(false)
+          }, 1000)
+        }
+
+      })
+  }
+
   return (
     <div className="App">
       <Container>
@@ -162,16 +200,73 @@ function App() {
             </div>
           </Col>
           <Col className="sectionBorder">
-            <div className='sectionTitleBox'>
-              <div className='sectionTitle'>
-                Reservoir
-              </div>
-            </div>
-            <div className='liveDataContainer'>
-              <div className='liveDataBox reservoir'>
-                <h3 className='liveDataLabel'>Water Level</h3>
-                <div className='liveDataReading'>{ReservoirFormat(reservoir)} <span className='suffix'>%</span></div>
-              </div>
+            <Row className='sectionTitleBox'>
+              <Col>
+                <div className='sectionTitle'>
+                  Reservoir
+                </div>
+              </Col>
+              <Col className='saveButtonBox'>
+                {reservoirMode == "Notifications" ? <Button
+                  variant="outline"
+                  className="chartButton settingsSave"
+                  onClick={() => reservoirSubmit()}>
+                  {notificationLoading ? <Spinner animation="border" role="status" size='sm'>
+                    <span className="visually-hidden">Loading...</span>
+                  </Spinner> : <img src={diskette} className="saveButton" />}
+                </Button> : ""}
+                <Button
+                  variant="outline"
+                  className="chartButton settingsSave"
+                  onClick={() => reservoirMode == "Level" ? setReservoirMode('Notifications') : setReservoirMode('Level')}>
+                  {reservoirMode == "Level" ? <img className='saveButton' src={notification} /> : <img className='saveButton' src={waterlevel} />}
+                </Button>
+              </Col>
+            </Row>
+            <div className='liveDataContainer reservoirBox'>
+              {reservoirMode == "Level" ?
+                <div className='liveDataBox reservoir'>
+                  <h3 className='liveDataLabel'>Water Level</h3>
+                  <div className='liveDataReading'>{ReservoirFormat(reservoir)} <span className='suffix'>%</span></div>
+                </div> :
+                <Container>
+                  <Row className='formBox'>
+                    <Form.Label column="sm" lg={4}>
+                      HP Number
+                    </Form.Label>
+                    <Col className='timePickerBox'>
+                      <Form.Control disabled value={notificationNumber} className="timePickerCustom" onChange={changeEvent => setNotificationNumber(changeEvent.target.value)} />
+                    </Col>
+                  </Row>
+                  <Row className='formBox'>
+                    <Form.Label column="sm" lg={4}>
+                      Threshold (%)
+                    </Form.Label>
+                    <Col>
+                      <RangeSlider
+                        value={notificationThreshold}
+                        onChange={changeEvent => setNotificationThreshold(changeEvent.target.value)}
+                      />
+                    </Col>
+                    <Col xs="3">
+                      <Form.Control value={notificationThreshold} onChange={changeEvent => setNotificationThreshold(changeEvent.target.value)} />
+                    </Col>
+                  </Row>
+                  <Row className='formBox'>
+                    <Form.Label column="sm" lg={4}>
+                      On/Off
+                    </Form.Label>
+                    <Col >
+                      <Form.Check
+                        type="switch"
+                        id="custom-switch"
+                        className='switch'
+                        checked={notificationToggle}
+                        onChange={() => setNotificationToggle(!notificationToggle)}
+                      />
+                    </Col>
+                  </Row>
+                </Container>}
             </div>
           </Col>
         </Row>
@@ -190,7 +285,7 @@ function App() {
               </Col>
               <Col className='saveButtonBox'>
                 <Button
-                  variant="outline-primary"
+                  variant="outline"
                   className="chartButton settingsSave"
                   onClick={() => autoSubmit()}>
                   {autoLoading ? <Spinner animation="border" role="status" size='sm'>

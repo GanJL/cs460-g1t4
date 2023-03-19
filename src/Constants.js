@@ -1,40 +1,60 @@
 // operational ranges
-const sunlight_analog_min = 255 // 255 is room light
-const sunlight_analog_max = 6 // 6 is direct sunlight
-const moisture_analog_dry = 246 // 230 is 100% dry
-const moisture_analog_damp_cloth = 220
-const moisture_analog_wet = 205 // 200 is 100% wet
-const reservoir_analog_full = 125 // 125 is 100% full
-const reservoir_analog_70 = 110 
-const reservoir_analog_50 = 100 
-const reservoir_analog_30 = 80
-const reservoir_analog_20 = 70 
-const reservoir_analog_1 = 30 
+const sunlight_analog_min = 255
+const sunlight_analog_max = 6 
+
+const moisture_analog_dry = 230 
+const moisture_analog_damp = 200
+const moisture_analog_wet = 180 
+const moisture_reference = moisture_analog_dry - (moisture_analog_dry - moisture_analog_wet)/4
+
+const reservoir_analog_full = 125 
+// const reservoir_analog_70 = 110 
+// const reservoir_analog_50 = 100 
+// const reservoir_analog_30 = 80
+// const reservoir_analog_20 = 70 
+const reservoir_analog_min = 30 
+
+
+
 export function SunlightFormat(input) {
 
-    // to prevent rogue readings
+    // to out of boundary data
     if (input < 6) {
+        input = 255
+    }
+    else if (input > 230) {
         input = 255
     }
 
     var output = (Math.abs(input - sunlight_analog_min)) / (sunlight_analog_min-sunlight_analog_max)
+    
+    // to out of boundary data
     if (output > 1) {
         output = 1
     } 
     return (output * 100).toFixed(0);
 }
-// const moisture_analog_dry = 245
-// const moisture_analog_damp_cloth = 220
-// const moisture_analog_wet = 205 
+
 export function MoistureFormat(input) {
-    // to prevent rogue readings
-    if (input < moisture_analog_wet) {
-        input = moisture_analog_dry
+
+    // to out of boundary data
+    if (input > moisture_analog_dry) {
+        return 0;
     }
+    else if (input == 0) {
+        return 10;
+    }
+
     var output = (moisture_analog_dry - input) / (moisture_analog_dry-moisture_analog_wet)
+    
+    // to out of boundary data
     if (output > 1) {
         output = 1
     }
+    if (output < 0) {
+        output = 0
+    }
+
     return (output * 100).toFixed(0);
 }
 
@@ -45,14 +65,11 @@ export function MoistureFormat2(input) {
     return (moisture_analog_dry - output)
 }
 
-// const reservoir_analog_full = 125 // 125 is 100% full
-// const reservoir_analog_70 = 110 
-// const reservoir_analog_50 = 100 
-// const reservoir_analog_30 = 80
-// const reservoir_analog_20 = 70 
-// const reservoir_analog_1 = 30 
+
 export function ReservoirFormat(input) {
-    if (input < reservoir_analog_1) {
+
+    // to out of boundary data
+    if (input < reservoir_analog_min) {
         return 0;
     }
     else if (input >= reservoir_analog_full) {
@@ -61,6 +78,11 @@ export function ReservoirFormat(input) {
     else {
         return ((input/(reservoir_analog_full)) * 100).toFixed(0);
     }
+}
+
+export function ReservoirFormat2(input) {
+    return input/100*(reservoir_analog_full)
+    
 }
 
 

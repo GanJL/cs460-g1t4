@@ -45,17 +45,18 @@ const LiveData = ({ getReservoir }) => {
 
         socket.on("live_data", (data) => {
             var getData = JSON.parse(data.data);
-            console.log(getData)
             getReservoir(getData.reservoir)
-            setData({
-                temperature: getData.temperature,
-                humidity: getData.humidity,
-                moisture: getData.moisture,
-                sunlight: getData.sunlight,
-                reservoir: getData.reservoir,
-                timestamp: getData.time
+            if (getData.reservoir !== getData.sunlight && getData.reservoir !== getData.moisture){
+                setData({
+                    temperature: getData.temperature,
+                    humidity: getData.humidity,
+                    moisture: getData.moisture,
+                    sunlight: getData.sunlight,
+                    reservoir: getData.reservoir,
+                    timestamp: getData.time
+                });
+            }
 
-            });
             setError(false)
         });
 

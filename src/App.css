@@ -72,10 +72,15 @@
   justify-content: center;
 }
 
+.liveDataContainer.reservoirBox {
+  height: 200px;
+}
+
 .liveDataContainer.settings {
   padding-top: 0px;
   height: 500px;
 }
+
 
 .liveDataBox {
   width: 300px;
@@ -224,7 +229,7 @@
 }
 .timePickerBox {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 .timePickerCustom {
   width: 100px !important;
@@ -236,7 +241,7 @@
 
 .dropdownCustom {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
 }
 
 .dropdownCustom.col {
